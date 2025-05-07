@@ -1,3 +1,4 @@
+'use client';
 export default function LogInForm() {
     return (
         <div className="flex flex-col items-center justify-center min-h-screen" style={{ backgroundColor: '#E5E5CB',marginTop: 0}}>

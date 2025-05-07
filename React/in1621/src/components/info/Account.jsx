@@ -1,3 +1,4 @@
+'use client';
 export default function AccountDetails(){
     return(
         <div className="flex flex-col place-items-center h-screen justify-center">

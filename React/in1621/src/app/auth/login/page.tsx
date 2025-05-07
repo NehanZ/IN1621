@@ -1,4 +1,5 @@
-import LogInForm from "../../components/auth/LogInForm"
+'use client';
+import LogInForm from "../../../components/auth/LogInForm"
 
 export default function LogIn() {
     return (

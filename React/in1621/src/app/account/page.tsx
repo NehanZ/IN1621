@@ -1,4 +1,4 @@
-import AccountDetails from '../components/info/Account';
+import AccountDetails from '../../components/info/Account';
 
 export default function Account(){
     return(
