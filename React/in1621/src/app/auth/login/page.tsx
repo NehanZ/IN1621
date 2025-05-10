@@ -1,4 +1,3 @@
-'use client';
 import LogInForm from "../../../components/auth/LogInForm"
 import { redirect } from "next/navigation";
 import { getServerSession } from "next-auth";

@@ -4,42 +4,44 @@ import  connectMongoDB  from "../../../../lib/mongodb";
 import User from "../../../../models/User";
 import bcrypt from "bcryptjs";
 
-
 export  const authOptions = {
+
     providers : [
         CredentialProvider({
             name : "Credentials",
-            credentials : {},
-
+            credentials: {
+                email: { label: "Email", type: "text" },
+                password: { label: "Password", type: "password" }
+            },
+              
             async authorize(credentials) {
                 const { email, password } = credentials;
-                
+            
                 try {
                     await connectMongoDB();
-                    const user = await User.findOne({ email});
-
-                    if(!user) {
-                       console.log("User not found");
-                        return null;
+                    const user = await User.findOne({ email });
+            
+                    if (!user) {
+                        throw new Error("user_not_found");
                     }
-
+            
                     const isPasswordCorrect = await bcrypt.compare(password, user.password);
-                    if(!isPasswordCorrect) {
-                       console.log("Invalid password");
-                        return null;
+                    if (!isPasswordCorrect) {
+                        throw new Error("invalid_password");
                     }
-
+            
                     return {
                         id: user._id.toString(),
                         email: user.email,
-                        name: user.name || user.username || email.split("@")[0]
-                      };
-
+                        name: user.name || user.username || email.split("@")[0],
+                    };
+            
                 } catch (error) {
-                    console.error("Error in authorize:", error);
-                    return null;
+                    console.error("Auth error:", error.message);
+                    throw new Error(error.message);
                 }
             }
+            
         }),
     ],
     session : {
@@ -47,7 +49,7 @@ export  const authOptions = {
     },
     secret: process.env.NEXTAUTH_SECRET,
     pages : {
-        signIn : "/auth/signin",
+        signIn : "/auth/login",
         // signOut : "/auth/signout",
         // error : "/auth/error",
         // verifyRequest : "/auth/verify-request",
