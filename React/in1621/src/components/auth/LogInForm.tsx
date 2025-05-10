@@ -14,26 +14,33 @@ export default function LogInForm() {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-
+    
         try {
             const res = await signIn("credentials", {
                 email,
                 password,
                 redirect: false,
                 callbackUrl: "/",
-            })
-
-            if (res.error) {
-                setError("Invalid email or password");
+            });
+    
+            if (res?.error) {
+                let message = "Login failed.";
+                if (res.error === "user_not_found") {
+                    message = "User does not exist.";
+                } else if (res.error === "invalid_password") {
+                    message = "Incorrect password.";
+                }
+                alert(message); // or setError(message) to show in UI
                 return;
             }
-
-            router.replace("/")
+    
+            router.replace("/");
         } catch (error) {
-            console.error("Error signing in:", error);
+            console.error("Login error:", error);
+            alert("Unexpected error occurred. Try again.");
         }
-       
     };
+    
 
     return (
         <div className="flex flex-col items-center justify-center min-h-screen" style={{ backgroundColor: '#E5E5CB',marginTop: 0}}>
