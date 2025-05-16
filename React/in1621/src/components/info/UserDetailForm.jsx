@@ -1,5 +1,4 @@
 'use client';
-import { set } from 'mongoose';
 import React from 'react';
 import { useState } from "react";
 import { useRouter } from "next/navigation";
@@ -32,10 +31,18 @@ export default function UserDetailForm({ userId }) {
                 headers: {
                     "Content-Type": "application/json",
                 },
-                body: JSON.stringify({ userId, firstName, lastName, mnumber, address }),
+                body: JSON.stringify({ userId, firstname: firstName, lastname: lastName, mnumber, address }),
             });
 
-            const data = await response.json();
+            if (!response.ok) {
+                const errorData = await response.text();
+                console.error("Server error response:", errorData);
+                alert("Something went wrong");
+                return;
+            }
+
+const data = await response.json();
+
 
             if (response.ok && data) {
                 console.log("User details saved successfully:", data);
@@ -55,7 +62,7 @@ export default function UserDetailForm({ userId }) {
     return (
         <div className="flex flex-col items-center justify-center min-h-screen" style={{ backgroundColor: '#E5E5CB', marginTop: 0 }}>
             <h1 className="text-4xl font-bold mb-6" style={{ color: '#1A120B' }}>User Details</h1>
-            <div className="w- max-w-md rounded-lg shadow-md p-6" style={{ backgroundColor: '#D5CEA3' }}></div>
+            <div className="w- max-w-md rounded-lg shadow-md p-6" style={{ backgroundColor: '#D5CEA3' }}>
                 <h2 className="text-lg mb-4 text-center" style={{ color: '#3C2A21' }}>
                     Enter your Details below to create an account.
                 </h2>
@@ -120,6 +127,8 @@ export default function UserDetailForm({ userId }) {
                         Submit
                     </button>
                 </form>
+                        
+            </div>
         </div>
     );
 }

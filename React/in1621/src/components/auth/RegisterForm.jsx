@@ -17,67 +17,74 @@ export default function RegisterForm({ onSuccess }) {
     };
 
     const handleSubmit = async (e) => {
-        e.preventDefault();
+    e.preventDefault();
 
-        if (!username || !email || !password || !confirmPassword) {
-            alert("Please fill in all fields.");
-            return;
-        }
-
-        // Password mismatch
-        if (password !== confirmPassword) {
-            setError("Passwords do not match.");
-            alert("Passwords do not match.");
-            return;
-        }
-        
-        try {
-
-            const responseUserExists = await fetch("/api/userexists", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({ email }),
-            });
-
-            const { user } = await responseUserExists.json();
-            if (user) {
-                setError("Email already exists.");
-                alert("Email already exists.");
-                return;
-            }
-
-            const response = await fetch("/api/register", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({ username, email, password }),
-            });
-
-            const data = await response.json();
-
-            if (response.ok && data.userId ) {
-                const form = e.target;
-                alert("User registered successfully.");
-                form.reset(); 
-                onSuccess(data.userId);
-                // router.push("/auth/login"); 
-            }else{
-                console.log("User Registration failed.");
-            }
-
-            // const data = await response.json();
-            // console.log("Success:", data);
-            // // Handle success (e.g., redirect to login page)
-        } catch (error) {
-            console.error("Error:", error);
-            handleError("Registration failed. Please try again.");
-        }
-
-        handleError(null);
+    if (!username || !email || !password || !confirmPassword) {
+        alert("Please fill in all fields.");
+        return;
     }
+
+    if (password !== confirmPassword) {
+        setError("Passwords do not match.");
+        alert("Passwords do not match.");
+        return;
+    }
+
+    try {
+        handleError(null);
+
+        const responseUserExists = await fetch("/api/userexists", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ email }),
+        });
+
+        const { user } = await responseUserExists.json();
+        if (user) {
+            setError("Email already exists.");
+            alert("Email already exists.");
+            return;
+        }
+
+        const response = await fetch("/api/register", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ username, email, password }),
+        });
+
+        const data = await response.json();
+        console.log("Register response data:", data);
+
+
+        if (response.ok && data.userId) {
+            alert("User registered successfully.");
+
+            // Clear all fields
+            setUsername("");
+            setEmail("");
+            setPassword("");
+            setconfirmPassword("");
+
+            // Notify parent
+            setTimeout(() => {
+                onSuccess(data.userId);
+            }, 300);
+
+        } else {
+            console.log("User registration failed.");
+            handleError("User registration failed.");
+        }
+
+    } catch (error) {
+        console.error("Error:", error);
+        handleError("Registration failed. Please try again.");
+    }
+};
+
 
 
     return (
