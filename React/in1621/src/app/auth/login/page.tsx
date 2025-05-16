@@ -1,18 +1,23 @@
+'use client';
 import LogInForm from "../../../components/auth/LogInForm"
-import { redirect } from "next/navigation";
-import { getServerSession } from "next-auth";
-import { authOptions } from "../../api/auth/[...nextauth]/route";
+import { useEffect } from "react";
+import { useRouter } from "next/navigation";
+import { useSession } from "next-auth/react";
 
-export default async function LogIn() {
+export default function LogIn() {
+    const { data: session } = useSession();
+    const router = useRouter();
 
-    const session = await getServerSession(authOptions as any);
-    if ( session ) redirect("\account");
+    useEffect(() => {
+        if (session) {
+            router.replace("/account");
+        }
+    }, [session, router]);
 
     return (
         <main>
-         <LogInForm />
+            <LogInForm />
         </main>
     );
-     
 }
   

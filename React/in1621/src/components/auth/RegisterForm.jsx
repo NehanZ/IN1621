@@ -2,7 +2,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 
-export default function RegisterForm() {
+export default function RegisterForm({ onSuccess }) {
 
     const [username, setUsername] = useState("");
     const [email, setEmail] = useState("");
@@ -17,65 +17,74 @@ export default function RegisterForm() {
     };
 
     const handleSubmit = async (e) => {
-        e.preventDefault();
+    e.preventDefault();
 
-        if (!username || !email || !password || !confirmPassword) {
-            console.log("Form submitted");
-            alert("Please fill in all fields.");
-            return;
-        }
-
-        // Password mismatch
-        if (password !== confirmPassword) {
-            setError("Passwords do not match.");
-            alert("Passwords do not match.");
-            return;
-        }
-        
-        try {
-
-            const responseUserExists = await fetch("/api/userexists", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({ email }),
-            });
-
-            const { user } = await responseUserExists.json();
-            if (user) {
-                setError("Email already exists.");
-                alert("Email already exists.");
-                return;
-            }
-
-            const response = await fetch("/api/register", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({ username, email, password }),
-            });
-
-            if (response.ok) {
-                const form = e.target;
-                alert("User registered successfully.");
-                form.reset(); 
-                router.push("/auth/login"); 
-            }else{
-                console.log("User Registration failed.");
-            }
-
-            // const data = await response.json();
-            // console.log("Success:", data);
-            // // Handle success (e.g., redirect to login page)
-        } catch (error) {
-            console.error("Error:", error);
-            handleError("Registration failed. Please try again.");
-        }
-
-        handleError(null);
+    if (!username || !email || !password || !confirmPassword) {
+        alert("Please fill in all fields.");
+        return;
     }
+
+    if (password !== confirmPassword) {
+        setError("Passwords do not match.");
+        alert("Passwords do not match.");
+        return;
+    }
+
+    try {
+        handleError(null);
+
+        const responseUserExists = await fetch("/api/userexists", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ email }),
+        });
+
+        const { user } = await responseUserExists.json();
+        if (user) {
+            setError("Email already exists.");
+            alert("Email already exists.");
+            return;
+        }
+
+        const response = await fetch("/api/register", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ username, email, password }),
+        });
+
+        const data = await response.json();
+        console.log("Register response data:", data);
+
+
+        if (response.ok && data.userId) {
+            alert("User registered successfully.");
+
+            // Clear all fields
+            setUsername("");
+            setEmail("");
+            setPassword("");
+            setconfirmPassword("");
+
+            // Notify parent
+            setTimeout(() => {
+                onSuccess(data.userId);
+            }, 300);
+
+        } else {
+            console.log("User registration failed.");
+            handleError("User registration failed.");
+        }
+
+    } catch (error) {
+        console.error("Error:", error);
+        handleError("Registration failed. Please try again.");
+    }
+};
+
 
 
     return (
@@ -83,7 +92,7 @@ export default function RegisterForm() {
             <h1 className="text-4xl font-bold mb-6" style={{ color: '#1A120B' }}>Register</h1>
             <div className="w- max-w-md rounded-lg shadow-md p-6" style={{ backgroundColor: '#D5CEA3' }}>
                 <h2 className="text-lg mb-4 text-center" style={{ color: '#3C2A21' }}>
-                    Enter your details below to create an account.
+                    Enter your Email below to create an account.
                 </h2>
                 <form className="space-y-4 p-4"
                     onSubmit={handleSubmit} >
