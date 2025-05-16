@@ -2,7 +2,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 
-export default function RegisterForm() {
+export default function RegisterForm({ onSuccess }) {
 
     const [username, setUsername] = useState("");
     const [email, setEmail] = useState("");
@@ -20,7 +20,6 @@ export default function RegisterForm() {
         e.preventDefault();
 
         if (!username || !email || !password || !confirmPassword) {
-            console.log("Form submitted");
             alert("Please fill in all fields.");
             return;
         }
@@ -57,11 +56,14 @@ export default function RegisterForm() {
                 body: JSON.stringify({ username, email, password }),
             });
 
-            if (response.ok) {
+            const data = await response.json();
+
+            if (response.ok && data.userId ) {
                 const form = e.target;
                 alert("User registered successfully.");
                 form.reset(); 
-                router.push("/auth/login"); 
+                onSuccess(data.userId);
+                // router.push("/auth/login"); 
             }else{
                 console.log("User Registration failed.");
             }
@@ -83,7 +85,7 @@ export default function RegisterForm() {
             <h1 className="text-4xl font-bold mb-6" style={{ color: '#1A120B' }}>Register</h1>
             <div className="w- max-w-md rounded-lg shadow-md p-6" style={{ backgroundColor: '#D5CEA3' }}>
                 <h2 className="text-lg mb-4 text-center" style={{ color: '#3C2A21' }}>
-                    Enter your details below to create an account.
+                    Enter your Email below to create an account.
                 </h2>
                 <form className="space-y-4 p-4"
                     onSubmit={handleSubmit} >
