@@ -21,6 +21,8 @@ const teamMembers = [
 
 
 import React from 'react';
+import Link from 'next/link';
+
 
 export default function About() {
   return (
@@ -31,7 +33,9 @@ export default function About() {
         <nav className="nav">
           <ul>
             <li><a href="/">HOME</a></li>
-            <li><a href="/about">ABOUT</a></li>
+            <li>
+              <Link href="/about">ABOUT</Link>
+            </li>
             <li><a href="#">MENU</a></li>
             <li><a href="#">CONTACT</a></li>
             <li><a href="#">CART</a></li>
