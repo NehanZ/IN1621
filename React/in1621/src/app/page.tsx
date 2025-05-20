@@ -45,6 +45,8 @@ const reviews = [
     time: '1 Week Ago',
   },
 ];
+import Link from 'next/link';
+
 export default function Home() {
     return (
       /*<div>
@@ -58,7 +60,9 @@ export default function Home() {
         <nav className="nav">
           <ul>
             <li><a href="#">HOME</a></li>
-            <li><a href="#">ABOUT</a></li>
+            <li>
+               <Link href="/about">ABOUT</Link>
+            </li>
             <li><a href="#">MENU</a></li>
             <li><a href="#">CONTACT</a></li>
             <li><a href="#">CART</a></li>
