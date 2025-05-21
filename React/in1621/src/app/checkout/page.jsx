@@ -1,6 +1,8 @@
 'use client';
 import { useState } from 'react';
 import Link from 'next/link';
+import Header from '../../components/header-footer/Header';
+import Footer from '../../components/header-footer/Footer';
 
 export default function Checkout() {
   const [promoCode, setPromoCode] = useState('');
@@ -20,13 +22,15 @@ export default function Checkout() {
   };
 
   return (
+    <div>
+    < Header />
     <div className="min-h-screen bg-[#E5E5CB] py-8 px-4">
       <div className="container mx-auto">
         <h1 className="text-3xl font-bold text-[#3C2A21] mb-8">Checkout</h1>
         
         <div className="flex flex-col lg:flex-row gap-8">
           {/* Delivery Information */}
-          <div className="flex-1 bg-white p-6 rounded-lg shadow-md">
+          <div className="flex-1 bg-[#e9e9db] p-6 rounded-lg shadow-md">
             <h2 className="text-2xl font-bold text-[#3C2A21] mb-6">Delivery Information</h2>
             
             <form className="space-y-4">
@@ -45,7 +49,7 @@ export default function Checkout() {
                   <label htmlFor="province" className="block text-[#3C2A21] mb-1">Province</label>
                   <select 
                     id="province" 
-                    className="w-full p-3 border border-[#D5CEA3] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#3C2A21] bg-white"
+                    className="w-full p-3 border border-[#D5CEA3] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#3C2A21] bg-[#e9e9db]"
                   >
                     <option value="">Choose Province</option>
                     <option value="central">Central</option>
@@ -76,7 +80,7 @@ export default function Checkout() {
                   <label htmlFor="district" className="block text-[#3C2A21] mb-1">District</label>
                   <select 
                     id="district" 
-                    className="w-full p-3 border border-[#D5CEA3] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#3C2A21] bg-white"
+                    className="w-full p-3 border border-[#D5CEA3] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#3C2A21] bg-[#e9e9db]"
                   >
                     <option value="">Choose District</option>
                     <option value="gampaha">Gampaha</option>
@@ -103,7 +107,7 @@ export default function Checkout() {
                   <label htmlFor="city" className="block text-[#3C2A21] mb-1">City</label>
                   <select 
                     id="city" 
-                    className="w-full p-3 border border-[#D5CEA3] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#3C2A21] bg-white"
+                    className="w-full p-3 border border-[#D5CEA3] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#3C2A21] bg-[#e9e9db]"
                   >
                     <option value="">Choose City</option>
                     {/* Add cities */}
@@ -127,10 +131,10 @@ export default function Checkout() {
                   <button
                     type="button"
                     onClick={() => setSelectedLabel('office')}
-                    className={`px-4 py-2 rounded-lg flex items-center gap-2 ${
+                    className={`px-4 py-2 rounded-lg flex items-center gap-2 border border-[#3C2A21] ${
                       selectedLabel === 'office' 
                         ? 'bg-[#3C2A21] text-[#E5E5CB]' 
-                        : 'bg-[#D5CEA3] text-[#3C2A21]'
+                        : 'bg-[#e9e9db] text-[#3C2A21]'
                     }`}
                   >
                     🏢 OFFICE
@@ -138,10 +142,10 @@ export default function Checkout() {
                   <button
                     type="button"
                     onClick={() => setSelectedLabel('home')}
-                    className={`px-4 py-2 rounded-lg flex items-center gap-2 ${
+                    className={`px-4 py-2 rounded-lg flex items-center gap-2 border border-[#3C2A21] ${
                       selectedLabel === 'home' 
                         ? 'bg-[#3C2A21] text-[#E5E5CB]' 
-                        : 'bg-[#D5CEA3] text-[#3C2A21]'
+                        : 'bg-[#e9e9db] text-[#3C2A21]'
                     }`}
                   >
                     🏠 HOME
@@ -201,7 +205,7 @@ export default function Checkout() {
           </div>
           
           {/* Order Summary */}
-          <div className="lg:w-96 bg-white p-6 rounded-lg shadow-md h-fit">
+          <div className="lg:w-96 bg-[#e9e9db] p-6 rounded-lg shadow-md h-fit">
             <h3 className="text-xl font-bold text-[#3C2A21] mb-4">Promotion</h3>
             <div className="flex mb-6">
               <input
@@ -251,6 +255,8 @@ export default function Checkout() {
           </div>
         </div>
       </div>
+    </div>
+    < Footer />
     </div>
   );
 }

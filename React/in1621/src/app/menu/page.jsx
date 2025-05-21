@@ -3,6 +3,8 @@ import { useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import CoffeeProductCard from '../../components/product/CoffeeProductCard';
+import Header from '../../components/header-footer/Header';
+import Footer from '../../components/header-footer/Footer';
 
 const MenuPage = () => {
   const [activeFilter, setActiveFilter] = useState('all');
@@ -80,7 +82,9 @@ const MenuPage = () => {
     { id: 'cupcakes', name: 'Cupcakes' }
   ];
 
-  return (
+  return (     
+    <>
+    < Header />
     <div className="min-h-screen bg-[#E5E5CB] py-8 px-4">
       <div className="max-w-6xl mx-auto">
         <h1 className="text-4xl font-bold text-[#3C2A21] mb-2 text-center">Our Menu</h1>
@@ -138,6 +142,8 @@ const MenuPage = () => {
         )}
       </div>
     </div>
+    < Footer />
+    </>
   );
 };
 
