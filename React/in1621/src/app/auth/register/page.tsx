@@ -1,6 +1,8 @@
 'use client';
 import RegisterForm from "../../../components/auth/RegisterForm";
 import UserDetailForm from "../../../components/info/UserdetailForm";
+import Header from "../../../components/header-footer/Header";
+import Footer from "../../../components/header-footer/Footer";
 import { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
@@ -19,16 +21,18 @@ export default function Register() {
 
     return (
         <main>
+            < Header />
             {!isRegistered ? (
-                <RegisterForm
+                < RegisterForm
                     onSuccess={(newUserId: string) => {
                         setIsRegistered(true);
                         setUserId(newUserId);
                     }}
                 />
             ) : (
-                <UserDetailForm userId={userId} />
+                < UserDetailForm userId={userId} />
             )}
+            < Footer />
         </main>
     );
 }
