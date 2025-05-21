@@ -3,6 +3,8 @@ import LogInForm from "../../../components/auth/LogInForm"
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
+import Header from "../../../components/header-footer/Header";
+import Footer from "../../../components/header-footer/Footer";
 
 export default function LogIn() {
     const { data: session } = useSession();
@@ -16,7 +18,9 @@ export default function LogIn() {
 
     return (
         <main>
-            <LogInForm />
+            < Header />
+            < LogInForm />
+            < Footer />
         </main>
     );
 }
