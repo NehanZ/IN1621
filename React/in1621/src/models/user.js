@@ -13,10 +13,16 @@ const userSchema = new mongoose.Schema(
         password: {
             type: String,
             required: true,
-        },
+        },        
     },
     {timestamps: true,} 
 );
+
+
+// // Add method to compare passwords
+// userSchema.methods.comparePassword = async function (candidatePassword) {
+//     return await bcrypt.compare(candidatePassword, this.password);
+// };
 
 
 
