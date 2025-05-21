@@ -2,9 +2,12 @@
 import Link from 'next/link';
 import { useState } from 'react';
 import { ShoppingCart, Menu, X, User } from 'lucide-react';
+import { useCart } from '../../components/context/CartContext';
+
 
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const { totalItems } = useCart();
 
   return (
     <header className="bg-[#2a1f1a] text-white py-4 px-6 sticky top-0 z-50 shadow-md">
@@ -37,11 +40,13 @@ export default function Header() {
 
         {/* Cart and Mobile Menu Button */}
         <div className="flex items-center space-x-6">
-          <Link href="/checkout" className="hover:text-[#c28f5a] transition-colors relative">
+          <Link href="/cart" className="relative hover:text-[#c28f5a]">
             <ShoppingCart size={24} />
-            <span className="absolute -top-2 -right-2 bg-[#c28f5a] text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
-              0
-            </span>
+            {totalItems > 0 && (
+              <span className="absolute -top-2 -right-2 bg-[#c28f5a] text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
+                {totalItems}
+              </span>
+            )}
           </Link>
 
           <Link href="/account" className="hover:text-[#c28f5a] transition-colors">

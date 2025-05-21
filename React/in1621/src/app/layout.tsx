@@ -1,5 +1,5 @@
 import './app.css';
-import { AuthProvider } from './Providers';
+import { CartProvider } from '../components/context/CartContext';
 
 export const metadata = {
   title: 'Next.js',
@@ -14,7 +14,9 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
-        <AuthProvider Children={children} />
+        <CartProvider>
+          {children}
+        </CartProvider>
       </body>
     </html>
   );
