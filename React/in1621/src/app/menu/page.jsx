@@ -12,11 +12,10 @@ const MenuPage = () => {
   useEffect(() => {
     const fetchMenu = async () => {
       try {
-        const res = await fetch('/api/product');
+        const res = await fetch('/api/products'); // Updated API endpoint
         if (!res.ok) {
           throw new Error('Failed to fetch menu');
         }
-
         const data = await res.json();
         setProducts(data);
       } catch (error) {
@@ -39,8 +38,8 @@ const MenuPage = () => {
     { id: 'all', name: 'All Items' },
     { id: 'coffee', name: 'Coffees' },
     { id: 'buns', name: 'Buns' },
-    { id: 'cakes', name: 'Cakes' },
-    { id: 'cupcakes', name: 'Cupcakes' }
+    { id: 'Cool Drinks', name: 'Cool Drinks' },
+    { id: 'Cupcakes', name: 'Cupcakes' }
   ];
 
   return (

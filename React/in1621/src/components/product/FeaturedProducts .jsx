@@ -1,17 +1,17 @@
-'use client';
-import CoffeeProductCard from './CoffeeProductCard';
+import React from 'react';
 
-const FeaturedProducts = ({ products }) => {
-  return (
-    <div className="my-8">
-      <h2 className="text-2xl font-bold text-[#3C2A21] mb-4">Our Favorites</h2>
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        {products.slice(0, 4).map(product => (
-          <CoffeeProductCard key={product.id} product={product} />
+const FeaturedProducts = ({ products }) => (
+  <div>
+    {products && products.length > 0 ? (
+      <ul>
+        {products.map((product) => (
+          <li key={product.id || product._id}>{product.name}</li>
         ))}
-      </div>
-    </div>
-  );
-};
+      </ul>
+    ) : (
+      <p>No featured products available.</p>
+    )}
+  </div>
+);
 
 export default FeaturedProducts;

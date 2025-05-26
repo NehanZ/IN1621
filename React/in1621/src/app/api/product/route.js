@@ -1,71 +1,38 @@
-// app/api/products/route.js
-/*export async function GET() {
-  const products = [
-    // Your product data here
-  ];
-  return Response.json(products);
-}*/
-import { NextResponse } from "next/server";
+import connectMongoDB from '../../../lib/mongodb';
+import Product from '../../../models/Product';
 
-const products = [
-  {
-    id: 1,
-    name: 'Classic Cappuccino',
-    description: 'Perfect balance of espresso, steamed milk and silky foam',
-    price: '350',
-    image: '/images/cappuccino.jpg',
-    category: 'coffee',
-    details: 'Our signature cappuccino made with locally sourced coffee beans and organic milk. Served in a 8oz cup.'
-  },
-  {
-    id: 2,
-    name: 'Butter Croissant',
-    description: 'Flaky, buttery pastry baked fresh daily',
-    price: '250',
-    image: '/images/croissant.jpg',
-    category: 'buns',
-    details: 'Made with French butter and slow-fermented dough for maximum flavor. Perfect with our coffee.'
-  },
-  {
-    id: 3,
-    name: 'Chocolate Cupcake',
-    description: 'Rich chocolate cake with velvety frosting',
-    price: '300',
-    image: '/images/cupcake.jpg',
-    category: 'cupcakes',
-    details: 'Moist chocolate cake topped with our special chocolate ganache. Contains dairy and gluten.'
-  },
-  {
-    id: 4,
-    name: 'Blueberry Muffin',
-    description: 'Gluten-free muffin with fresh blueberries',
-    price: '400',
-    image: '/images/muffin.jpg',
-    category: 'cakes',
-    details: 'Made with almond flour and packed with antioxidant-rich blueberries. Gluten-free and dairy-free option available.'
-  },
-  {
-    id: 5,
-    name: 'Latte',
-    description: 'Smooth espresso with steamed milk',
-    price: '320',
-    image: '/images/latte.jpg',
-    category: 'coffee',
-    details: 'Our creamy latte made with double shot of espresso and your choice of milk. Available in regular, soy, or oat milk.'
-  },
-  {
-    id: 6,
-    name: 'Cinnamon Roll',
-    description: 'Sweet bun with cinnamon sugar filling',
-    price: '280',
-    image: '/images/cinnamon-roll.jpg',
-    category: 'buns',
-    details: 'Freshly baked cinnamon rolls with cream cheese icing. Best served warm.'
+export default async function handler(req, res) {
+  if (req.method === 'GET') {
+    try {
+      await connectMongoDB();
+      const products = await Product.find({});
+      res.status(200).json(products);
+    } catch (error) {
+      console.error('Error fetching products:', error);
+      res.status(500).json({ message: 'An error occurred while fetching products.' });
+    }
+  } else if (req.method === 'POST') {
+    try {
+      const { name, description, price, category, image, stock } = req.body;
+
+      await connectMongoDB();
+      const newProduct = new Product({
+        name,
+        description,
+        price,
+        category,
+        image,
+        stock,
+      });
+
+      await newProduct.save();
+      res.status(201).json(newProduct);
+    } catch (error) {
+      console.error('Error adding product:', error);
+      res.status(500).json({ message: 'An error occurred while adding the product.' });
+    }
+  } else {
+    res.setHeader('Allow', ['GET', 'POST']);
+    res.status(405).json({ message: `Method ${req.method} not allowed` });
   }
-];
-
-export async function GET(req) {
-  
-
-  return NextResponse.json(products);
 }
