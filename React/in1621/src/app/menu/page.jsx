@@ -12,7 +12,7 @@ const MenuPage = () => {
   useEffect(() => {
     const fetchMenu = async () => {
       try {
-        const res = await fetch('/api/products'); // Updated API endpoint
+        const res = await fetch('/api/product', { cache: 'no-store' }); // Ensure fresh data and correct path
         if (!res.ok) {
           throw new Error('Failed to fetch menu');
         }
@@ -36,8 +36,8 @@ const MenuPage = () => {
 
   const categories = [
     { id: 'all', name: 'All Items' },
-    { id: 'coffee', name: 'Coffees' },
-    { id: 'buns', name: 'Buns' },
+    { id: 'Coffee', name: 'Coffees' },
+    { id: 'Buns', name: 'Buns' },
     { id: 'Cool Drinks', name: 'Cool Drinks' },
     { id: 'Cupcakes', name: 'Cupcakes' }
   ];
@@ -81,7 +81,7 @@ const MenuPage = () => {
           {filteredProducts.length > 0 ? (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
               {filteredProducts.map(product => (
-                <CoffeeProductCard key={product.id} product={product} />
+                <CoffeeProductCard key={product._id} product={product} />
               ))}
             </div>
           ) : (

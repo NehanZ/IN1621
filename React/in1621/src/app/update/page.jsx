@@ -23,27 +23,39 @@ export default function ManageProductPage() {
     setAddFormData({ ...addFormData, [name]: value });
   };
 
-  const handleAddSubmit = async (e) => {
-    e.preventDefault();
-    try {
-      const response = await fetch('/api/products', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(addFormData),
-      });
+const handleAddSubmit = async (e) => {
+  e.preventDefault();
+  try {
+    const response = await fetch('/api/product', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        ...addFormData,
+        price: Number(addFormData.price),
+        stock: Number(addFormData.stock),
+      }),
+    });
 
-      if (response.ok) {
-        router.refresh(); // Refresh the page to see the updated product list
-        router.reload(); // Refresh the page to see the updated product list
-      } else {
-        console.error('Failed to add product');
-        alert('Failed to add product');
-      }
-    } catch (error) {
-      console.error('Error adding product:', error);
-      alert('An error occurred while adding the product.');
+    if (response.ok) {
+      alert('Product added successfully!');
+      router.refresh(); // Refresh the page to see the updated product list
+      setAddFormData({
+        name: '',
+        description: '',
+        price: '',
+        category: '',
+        stock: '',
+        image: '',
+      });
+    } else {
+      console.error('Failed to add product');
+      alert('Failed to add product');
     }
-  };
+  } catch (error) {
+    console.error('Error adding product:', error);
+    alert('An error occurred while adding the product.');
+  }
+};
 
   const handleDeleteInputChange = (e) => {
     setDeleteProductId(e.target.value);
@@ -119,14 +131,19 @@ export default function ManageProductPage() {
 
           <div className="mb-4">
             <label className="block text-sm font-medium">Category</label>
-            <input
-              type="text"
+            <select
               name="category"
               value={addFormData.category}
               onChange={handleAddInputChange}
               className="w-full p-2 border rounded"
               required
-            />
+            >
+              <option value="">Select a category</option>
+              <option value="Coffee">Coffee</option>
+              <option value="Cool Drinks">Cool Drinks</option>
+              <option value="Buns">Buns</option>
+              <option value="Cupcakes">Cupcakes</option>
+            </select>
           </div>
 
           <div className="mb-4">

@@ -8,25 +8,22 @@ export default function CustomerReview() {
       id: 1,
       name: 'Sarah J.',
       rating: 5,
-      date: '2023-11-10',
+      date: '2025-06-10',
       comment: 'The best cappuccino I\'ve ever had! The atmosphere is cozy and the staff is incredibly friendly.',
-      photo: '/images/reviewers/sarah.jpg'
     },
     {
       id: 2,
       name: 'Michael T.',
       rating: 4,
-      date: '2023-10-28',
+      date: '2025-05-28',
       comment: 'Great coffee and delicious pastries. Will definitely come back when I\'m in Colombo again.',
-      photo: '/images/reviewers/michael.jpg'
     },
     {
       id: 3,
       name: 'Priya K.',
       rating: 5,
-      date: '2023-10-15',
-      comment: 'Authentic coffee experience with locally sourced beans. Love supporting local businesses like Bartons!',
-      photo: '/images/reviewers/priya.jpg'
+      date: '2025-04-15',
+      comment: 'Authentic coffee experience with locally sourced beans. Love supporting local businesses like Ecafe!',
     }
   ]);
 
@@ -56,13 +53,6 @@ export default function CustomerReview() {
         {reviews.map((review) => (
           <div key={review.id} className="bg-[#E5E5CB] rounded-lg shadow-md p-6 min-w-[320px]">
             <div className="flex items-start gap-4">
-              <div className="w-12 h-12 rounded-full overflow-hidden">
-                <img
-                  src={review.photo}
-                  alt={review.name}
-                  className="w-full h-full object-cover"
-                />
-              </div>
               <div className="flex-1">
                 <div className="flex justify-between items-start">
                   <div>

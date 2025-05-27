@@ -4,10 +4,18 @@ import UserDetailForm from "../../../components/info/UserdetailForm";
 import Header from "../../../components/header-footer/Header";
 import Footer from "../../../components/header-footer/Footer";
 import { useState, useEffect } from "react";
-import { useSession } from "next-auth/react";
+import { useSession, SessionProvider } from "next-auth/react";
 import { useRouter } from "next/navigation";
 
 export default function Register() {
+    return (
+        <SessionProvider>
+            <RegisterContent />
+        </SessionProvider>
+    );
+}
+
+function RegisterContent() {
     const [isRegistered, setIsRegistered] = useState(false);
     const [userId, setUserId] = useState<string | null>(null);
     const { data: session } = useSession();
