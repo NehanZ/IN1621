@@ -1,5 +1,6 @@
 'use client';
 import { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import Header from '../../components/header-footer/Header';
 import Footer from '../../components/header-footer/Footer';
 import CoffeeProductCard from '../../components/product/CoffeeProductCard';
@@ -8,6 +9,7 @@ const MenuPage = () => {
   const [products, setProducts] = useState([]);
   const [activeFilter, setActiveFilter] = useState('all');
   const [searchQuery, setSearchQuery] = useState('');
+  const router = useRouter();
 
   useEffect(() => {
     const fetchMenu = async () => {
@@ -18,6 +20,11 @@ const MenuPage = () => {
         }
         const data = await res.json();
         setProducts(data);
+        
+        // Store products in sessionStorage for detail page to access
+        if (typeof window !== 'undefined') {
+          sessionStorage.setItem('menuProducts', JSON.stringify(data));
+        }
       } catch (error) {
         console.error('Failed to load menu:', error);
       }
@@ -25,6 +32,11 @@ const MenuPage = () => {
 
     fetchMenu();
   }, []);
+
+  const handleProductClick = (productId) => {
+    // Navigate to detail page
+    router.push(`/menu/${productId}`);
+  };
 
   const filteredProducts = products.filter(product => {
     const matchesCategory = activeFilter === 'all' || product.category === activeFilter;
@@ -81,7 +93,9 @@ const MenuPage = () => {
           {filteredProducts.length > 0 ? (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
               {filteredProducts.map(product => (
-                <CoffeeProductCard key={product._id} product={product} />
+                <div key={product._id} onClick={() => handleProductClick(product._id)} className="cursor-pointer">
+                  <CoffeeProductCard product={product} />
+                </div>
               ))}
             </div>
           ) : (
