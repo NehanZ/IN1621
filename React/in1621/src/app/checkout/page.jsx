@@ -1,15 +1,17 @@
 // app/checkout/page.tsx
 'use client';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Header from '../../components/header-footer/Header';
 import Footer from '../../components/header-footer/Footer';
 import { useCart } from '../../components/context/CartContext';
 import { useRouter } from 'next/navigation';
 import Toast from '../../components/Toast';
+import { SessionProvider, useSession } from 'next-auth/react';
 
 export default function Checkout() {
   const router = useRouter();
+  const { status } = useSession();
   const { cartItems = [], clearCart, subtotal, totalItems } = useCart();
   const [promoCode, setPromoCode] = useState('');
   const [deliveryFee] = useState(260);
@@ -18,6 +20,7 @@ export default function Checkout() {
   const [isProcessing, setIsProcessing] = useState(false);
   const [showToast, setShowToast] = useState(false);
   const [toastMessage, setToastMessage] = useState('');
+
 
   // Form state
   const [formData, setFormData] = useState({
@@ -31,6 +34,14 @@ export default function Checkout() {
   });
 
   const [errors, setErrors] = useState({});
+
+   useEffect(() => {
+        if (status === "unauthenticated") {
+            router.replace("/auth/login");
+        } else if (status === "authenticated") {
+            router.replace('/checkout');
+        }
+    }, [status, router]);
 
   const total = subtotal + deliveryFee;
 
@@ -373,7 +384,7 @@ export default function Checkout() {
                 
                 <div className="space-y-2 mb-4">
                   {cartItems.map(item => (
-                    <div key={item.id} className="flex justify-between">
+                    <div key={`${item.id}-${item.option || 'default'}`} className="flex justify-between">
                       <span>{item.name} {item.option && `(${item.option})`} × {item.quantity}</span>
                       <span>Rs. {(item.price * item.quantity).toLocaleString()}</span>
                     </div>

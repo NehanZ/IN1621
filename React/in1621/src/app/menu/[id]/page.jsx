@@ -22,14 +22,13 @@ export default function ProductDetails() {
     const getProduct = () => {
       try {
         setLoading(true);
-        
-        // First try to get product from sessionStorage (from listing page)
+
         if (typeof window !== 'undefined') {
           const storedProducts = sessionStorage.getItem('menuProducts');
           if (storedProducts) {
             const products = JSON.parse(storedProducts);
             const foundProduct = products.find(p => p._id === params.id);
-            
+
             if (foundProduct) {
               setProduct(foundProduct);
               setLoading(false);
@@ -37,10 +36,8 @@ export default function ProductDetails() {
             }
           }
         }
-        
-        // Fallback: fetch individual product if not found in sessionStorage
+
         fetchProductFromAPI();
-        
       } catch (error) {
         console.error('Error getting product from storage:', error);
         fetchProductFromAPI();
@@ -50,16 +47,16 @@ export default function ProductDetails() {
     const fetchProductFromAPI = async () => {
       try {
         const res = await fetch(`/api/products/${params.id}`);
-        
+
         if (res.status === 404) {
           setProduct(undefined);
           return;
         }
-        
+
         if (!res.ok) {
           throw new Error('Failed to fetch product');
         }
-        
+
         const prod = await res.json();
         setProduct(prod);
       } catch (error) {
@@ -117,7 +114,7 @@ export default function ProductDetails() {
       <div className="min-h-screen bg-[#E5E5CB] py-8 px-4">
         <div className="max-w-4xl mx-auto">
           <BackButton />
-          
+
           <div className="bg-[#D5CEA3] rounded-lg shadow-lg overflow-hidden mt-6">
             <div className="md:flex">
               {/* Product Image */}
@@ -132,12 +129,12 @@ export default function ProductDetails() {
                   />
                 </div>
               </div>
-              
+
               {/* Product Details */}
               <div className="md:w-1/2 p-6">
                 <h1 className="text-3xl font-bold text-[#3C2A21] mb-4">{product.name}</h1>
                 <p className="text-[#1A120B] mb-4 leading-relaxed">{product.description}</p>
-                
+
                 <div className="mb-4">
                   <span className="text-2xl font-bold text-[#3C2A21]">${product.price}</span>
                   <span className="ml-4 text-sm text-[#1A120B] bg-[#E5E5CB] px-3 py-1 rounded-full">
@@ -148,12 +145,16 @@ export default function ProductDetails() {
                 {/* Stock Status */}
                 {product.stock !== undefined && (
                   <div className="mb-4">
-                    <span className={`text-sm px-3 py-1 rounded-full ${
-                      product.stock > 0 
-                        ? 'bg-green-200 text-green-800' 
-                        : 'bg-red-200 text-red-800'
-                    }`}>
-                      {product.stock > 0 ? `In Stock (${product.stock} available)` : 'Out of Stock'}
+                    <span
+                      className={`text-sm px-3 py-1 rounded-full ${
+                        product.stock > 0
+                          ? 'bg-green-200 text-green-800'
+                          : 'bg-red-200 text-red-800'
+                      }`}
+                    >
+                      {product.stock > 0
+                        ? `In Stock (${product.stock} available)`
+                        : 'Out of Stock'}
                     </span>
                   </div>
                 )}
@@ -161,11 +162,9 @@ export default function ProductDetails() {
                 {/* Options */}
                 {product.options && product.options.length > 0 && (
                   <div className="mb-4">
-                    <label className="block text-[#3C2A21] font-semibold mb-2">
-                      Options:
-                    </label>
-                    <select 
-                      value={selectedOption || ''} 
+                    <label className="block text-[#3C2A21] font-semibold mb-2">Options:</label>
+                    <select
+                      value={selectedOption || ''}
                       onChange={handleOptionChange}
                       className="w-full px-3 py-2 border border-[#3C2A21] rounded-lg bg-[#E5E5CB] text-[#1A120B] focus:outline-none focus:ring-2 focus:ring-[#3C2A21]"
                     >
@@ -183,9 +182,7 @@ export default function ProductDetails() {
 
                 {/* Quantity */}
                 <div className="mb-6">
-                  <label className="block text-[#3C2A21] font-semibold mb-2">
-                    Quantity:
-                  </label>
+                  <label className="block text-[#3C2A21] font-semibold mb-2">Quantity:</label>
                   <input
                     type="number"
                     min="1"
@@ -213,10 +210,8 @@ export default function ProductDetails() {
           </div>
         </div>
       </div>
-      
-      {showToast && (
-        <Toast message={toastMessage} onClose={() => setShowToast(false)} />
-      )}
+
+      {showToast && <Toast message={toastMessage} onClose={() => setShowToast(false)} />}
       <Footer />
     </>
   );
