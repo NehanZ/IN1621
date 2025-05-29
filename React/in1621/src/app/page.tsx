@@ -12,16 +12,17 @@ import { useEffect, useState } from 'react';
 export default function Home() {
   const [lowStockProducts, setLowStockProducts] = useState([]);
 
-  // Fetch products with the lowest stock
   useEffect(() => {
     const fetchLowStockProducts = async () => {
       try {
-        const res = await fetch('/api/products/low-stock'); // Fetch from API
+        const res = await fetch('/api/product');
         if (!res.ok) {
           throw new Error('Failed to fetch low-stock products');
         }
         const data = await res.json();
-        setLowStockProducts(data);
+        // Filter products with low stock (e.g., stock <= 5)
+        const lowStock = data.filter((product) => product.stock <= 50);
+        setLowStockProducts(lowStock);
       } catch (error) {
         console.error('Error fetching low-stock products:', error);
       }
@@ -43,7 +44,7 @@ export default function Home() {
       <section className="relative h-[70vh] w-full">
         <Image
           src="/images/bg1.jpeg"
-          alt="Bartons Coffee Shop"
+          alt="Ecafe Coffee Shop"
           fill
           className="object-cover"
           priority
@@ -58,7 +59,7 @@ export default function Home() {
           }}
         >
           <div className="text-center px-4">
-            <h1 className="text-9xl md:text-7xl font-bold text-white mb-4">Bartons Coffee</h1>
+            <h1 className="text-9xl md:text-7xl font-bold text-white mb-4">Ecafe Coffee</h1>
             <p className="text-5xl md:text-2xl text-white mb-8">Serving the finest coffee in Colombo since 2010</p>
             <button className="bg-[#8a5a44] hover:bg-[#6d4737] text-white px-8 py-3 rounded-lg text-lg transition-colors cursor-pointer">
               View Menu
@@ -73,7 +74,7 @@ export default function Home() {
           <div>
             <h2 className="text-3xl font-bold text-[#3C2A21] mb-4">Our Story</h2>
             <p className="text-lg text-[#1A120B] mb-6">
-              Bartons Coffee began as a small family-owned café in the heart of Colombo. 
+              Ecafe Coffee began as a small family-owned café in the heart of Colombo. 
               Today, we're proud to serve our community with ethically-sourced beans 
               and handcrafted beverages made with care.
             </p>

@@ -22,16 +22,17 @@ const productSchema = new mongoose.Schema(
             enum: ['Coffee', 'Cool Drinks', 'Buns', 'Cupcakes'],
             trim: true,
         },
-        image: {
-            type: String,
-            default: '',
-            trim: true,
-        },
         stock: {
             type: Number,
             default: 0,
             min: 0,
         },
+        image: {
+            type: String,
+            default: '',
+            trim: true,
+        },
+        
     },
     {
         timestamps: true,
