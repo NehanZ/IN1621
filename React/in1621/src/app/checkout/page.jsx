@@ -1,4 +1,3 @@
-// app/checkout/page.tsx
 'use client';
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
@@ -11,7 +10,7 @@ import { SessionProvider, useSession } from 'next-auth/react';
 
 export default function Checkout() {
   const router = useRouter();
-  const { status } = useSession();
+  const { data: session, status } = useSession();
   const { cartItems = [], clearCart, subtotal, totalItems } = useCart();
   const [promoCode, setPromoCode] = useState('');
   const [deliveryFee] = useState(260);
@@ -20,7 +19,6 @@ export default function Checkout() {
   const [isProcessing, setIsProcessing] = useState(false);
   const [showToast, setShowToast] = useState(false);
   const [toastMessage, setToastMessage] = useState('');
-
 
   // Form state
   const [formData, setFormData] = useState({
@@ -35,13 +33,13 @@ export default function Checkout() {
 
   const [errors, setErrors] = useState({});
 
-   useEffect(() => {
-        if (status === "unauthenticated") {
-            router.replace("/auth/login");
-        } else if (status === "authenticated") {
-            router.replace('/checkout');
-        }
-    }, [status, router]);
+  useEffect(() => {
+    if (status === "unauthenticated") {
+      router.replace("/auth/login");
+    } else if (status === "authenticated") {
+      router.replace('/checkout');
+    }
+  }, [status, router]);
 
   const total = subtotal + deliveryFee;
 
@@ -85,30 +83,58 @@ export default function Checkout() {
     setIsProcessing(true);
 
     try {
-      // In a real app, you would send this to your backend
       const orderData = {
-        customer: {
-          ...formData,
-          deliveryLabel: selectedLabel
+        userId: session?.user?.id || session?.user?.email,
+        items: cartItems.map(item => ({
+          product: item.id,
+          name: item.name,
+          price: item.price,
+          quantity: item.quantity,
+          option: item.option || null
+        })),
+        totalAmount: total,
+        status: 'pending',
+        paymentDetails: {
+          method: selectedMethod,
+          amount: total,
+          deliveryFee: deliveryFee,
+          subtotal: subtotal,
+          promoCode: promoCode || null
         },
-        items: cartItems,
-        paymentMethod: selectedMethod,
-        subtotal,
-        deliveryFee,
-        total,
-        promoCode: promoCode || null
+        deliveryInfo: {
+          fullName: formData.fullName,
+          phone: formData.phone,
+          province: formData.province,
+          district: formData.district,
+          address: formData.address,
+          city: formData.city,
+          landmark: formData.landmark,
+          deliveryLabel: selectedLabel
+        }
       };
 
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1500));
-      
+      // Send POST request to save order
+      const response = await fetch('/api/orders', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(orderData)
+      });
+
+      const result = await response.json();
+
+      if (!response.ok) {
+        throw new Error(result.error || 'Failed to place order');
+      }
+
       // Clear cart and redirect on success
       clearCart();
-      router.push(`/order-confirmation?orderId=BRTN-${Math.floor(Math.random() * 10000)}`);
+      router.push(`/order-confirmation?orderId=${result.orderId}`);
       
     } catch (error) {
       console.error('Checkout error:', error);
-      setToastMessage('Failed to place order. Please try again.');
+      setToastMessage(error.message || 'Failed to place order. Please try again.');
       setShowToast(true);
     } finally {
       setIsProcessing(false);
@@ -290,7 +316,7 @@ export default function Checkout() {
                             : 'bg-[#e9e9db] text-[#3C2A21] border-[#3C2A21]'
                         }`}
                       >
-                        � HOME
+                        🏠 HOME
                       </button>
                     </div>
                     {errors.label && <p className="text-red-500 text-sm mt-1">{errors.label}</p>}
