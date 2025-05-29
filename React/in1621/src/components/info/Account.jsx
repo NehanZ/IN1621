@@ -1,10 +1,19 @@
 'use client';
 import { signOut, useSession } from "next-auth/react";
+import { SessionProvider } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
-export default function AccountDetails() {
-    const { data: session, status } = useSession();
+export function AccountDetailsWrapper() {
+    return (
+        <SessionProvider>
+            <AccountDetails />
+        </SessionProvider>
+    );
+}
+
+function AccountDetails() {
+    const { status } = useSession();
     const router = useRouter();
     const [userData, setUserData] = useState(null);
     const [isEditing, setIsEditing] = useState(false);
@@ -63,12 +72,9 @@ export default function AccountDetails() {
         try {
             const response = await fetch('/api/account', {
                 method: 'PUT',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
+                headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(formData),
             });
-
             if (response.ok) {
                 setMessage({ text: 'Details updated successfully', type: 'success' });
                 setIsEditing(false);
@@ -76,7 +82,7 @@ export default function AccountDetails() {
             } else {
                 setMessage({ text: 'Failed to update details', type: 'error' });
             }
-        } catch (error) {
+        } catch {
             setMessage({ text: 'An error occurred', type: 'error' });
         }
     };
@@ -87,31 +93,23 @@ export default function AccountDetails() {
             setMessage({ text: 'Passwords do not match', type: 'error' });
             return;
         }
-
         try {
             const response = await fetch('/api/account/change-password', {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
+                headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
                     currentPassword: passwordData.currentPassword,
                     newPassword: passwordData.newPassword
                 }),
             });
-
             if (response.ok) {
                 setMessage({ text: 'Password changed successfully', type: 'success' });
-                setPasswordData({
-                    currentPassword: '',
-                    newPassword: '',
-                    confirmPassword: ''
-                });
+                setPasswordData({ currentPassword: '', newPassword: '', confirmPassword: '' });
             } else {
                 const errorData = await response.json();
                 setMessage({ text: errorData.error || 'Failed to change password', type: 'error' });
             }
-        } catch (error) {
+        } catch {
             setMessage({ text: 'An error occurred', type: 'error' });
         }
     };
@@ -119,16 +117,13 @@ export default function AccountDetails() {
     const handleDeleteAccount = async () => {
         if (confirm("Are you sure you want to delete your account? This action cannot be undone.")) {
             try {
-                const response = await fetch('/api/account', {
-                    method: 'DELETE',
-                });
-
+                const response = await fetch('/api/account', { method: 'DELETE' });
                 if (response.ok) {
                     signOut({ callbackUrl: '/' });
                 } else {
                     setMessage({ text: 'Failed to delete account', type: 'error' });
                 }
-            } catch (error) {
+            } catch {
                 setMessage({ text: 'An error occurred', type: 'error' });
             }
         }
@@ -146,13 +141,11 @@ export default function AccountDetails() {
         <div className="flex flex-col items-center justify-center min-h-screen" style={{ backgroundColor: '#E5E5CB' }}>
             <div className="w-full max-w-2xl p-4">
                 <h1 className="text-4xl font-bold mb-6 text-center" style={{ color: '#1A120B' }}>My Account</h1>
-                
                 <div className="flex border-b mb-4" style={{ borderColor: '#3C2A21' }}>
                     <button
                         className={`py-2 px-4 ${activeTab === 'details' ? 'font-bold border-b-2' : ''} cursor-pointer`}
                         style={{ color: '#3C2A21', borderColor: '#3C2A21' }}
                         onClick={() => setActiveTab('details')}
-                        
                     >
                         Account Details
                     </button>
@@ -164,13 +157,11 @@ export default function AccountDetails() {
                         Change Password
                     </button>
                 </div>
-                
                 {message.text && (
                     <div className={`mb-4 p-2 rounded ${message.type === 'success' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}`}>
                         {message.text}
                     </div>
                 )}
-                
                 {activeTab === 'details' && (
                     <div className="rounded-lg shadow-md p-6" style={{ backgroundColor: '#D5CEA3' }}>
                         <div className="mb-4">
@@ -184,11 +175,9 @@ export default function AccountDetails() {
                                 <span style={{ color: '#1A120B' }}>{userData.user?.email}</span>
                             </div>
                         </div>
-                        
                         <h2 className="text-xl font-semibold mb-2" style={{ color: '#3C2A21' }}>
                             {isEditing ? 'Edit Personal Details' : 'Personal Details'}
                         </h2>
-                        
                         {!isEditing ? (
                             <div className="mb-4">
                                 {userData.userDetails ? (
@@ -246,7 +235,6 @@ export default function AccountDetails() {
                                         />
                                     </div>
                                 </div>
-                                
                                 <div>
                                     <label className="block mb-1" style={{ color: '#3C2A21' }}>Mobile Number</label>
                                     <input
@@ -260,7 +248,6 @@ export default function AccountDetails() {
                                         required
                                     />
                                 </div>
-                                
                                 <div>
                                     <label className="block mb-1" style={{ color: '#3C2A21' }}>Delivery Address</label>
                                     <input
@@ -274,7 +261,6 @@ export default function AccountDetails() {
                                     />
                                     <small className="text-xs" style={{ color: '#3C2A21' }}>* We only deliver within a 3km radius from our shop.</small>
                                 </div>
-                                
                                 <div className="flex gap-4 mt-6">
                                     <button
                                         type="submit"
@@ -295,7 +281,6 @@ export default function AccountDetails() {
                                 </div>
                             </form>
                         )}
-                        
                         <div className="mt-6 pt-4 border-t" style={{ borderColor: '#3C2A21' }}>
                             <button
                                 onClick={() => signOut()}
@@ -306,7 +291,6 @@ export default function AccountDetails() {
                         </div>
                     </div>
                 )}
-                
                 {activeTab === 'password' && (
                     <div className="rounded-lg shadow-md p-6" style={{ backgroundColor: '#D5CEA3' }}>
                         <h2 className="text-xl font-semibold mb-4" style={{ color: '#3C2A21' }}>Change Password</h2>
@@ -323,7 +307,6 @@ export default function AccountDetails() {
                                     required
                                 />
                             </div>
-                            
                             <div>
                                 <label className="block mb-1" style={{ color: '#3C2A21' }}>New Password</label>
                                 <input
@@ -336,7 +319,6 @@ export default function AccountDetails() {
                                     required
                                 />
                             </div>
-                            
                             <div>
                                 <label className="block mb-1" style={{ color: '#3C2A21' }}>Confirm New Password</label>
                                 <input
@@ -349,7 +331,6 @@ export default function AccountDetails() {
                                     required
                                 />
                             </div>
-                            
                             <button
                                 type="submit"
                                 className="w-full py-2 rounded-lg border-2 border-[#3C2A21] text-[#3C2A21] bg-transparent hover:bg-[#3C2A21] hover:text-[#E5E5CB] transition duration-200 cursor-pointer"
@@ -357,7 +338,6 @@ export default function AccountDetails() {
                                 Change Password
                             </button>
                         </form>
-                        
                         <div className="mt-6 pt-4 border-t" style={{ borderColor: '#3C2A21' }}>
                             <button
                                 onClick={handleDeleteAccount}

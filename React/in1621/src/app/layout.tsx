@@ -1,5 +1,6 @@
 import './app.css';
-import { AuthProvider } from './Providers';
+import { Providers } from '../components/Providers';
+
 
 export const metadata = {
   title: 'Next.js',
@@ -14,7 +15,9 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
-        <AuthProvider Children={children} />
+        <Providers>
+          {children}
+        </Providers>
       </body>
     </html>
   );

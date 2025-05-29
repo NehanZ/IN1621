@@ -33,8 +33,8 @@ export default function About() {
         className="h-96 flex items-center justify-center bg-cover bg-center text-white text-center"
         style={{ backgroundImage: "url('https://dynamic-media-cdn.tripadvisor.com/media/photo-o/17/56/b5/6a/idees-art-cafe-shop-kastoria.jpg?w=800&h=-1&s=1')" }}
       >
-        <div className="bg-black bg-opacity-50 p-8 rounded-lg">
-          <h1 className="text-4xl font-bold mb-4">Welcome to Ecafe Coffee</h1>
+        <div className="p-8 rounded-lg">
+          <h1 className="text-6xl font-bold mb-4">Welcome to Ecafe</h1>
           <p className="text-xl">Discover our passion in every cup</p>
         </div>
       </section>
@@ -42,7 +42,7 @@ export default function About() {
       {/* About Content */}
       <div className="container mx-auto px-4 py-12">
         {/* Our Story */}
-        <section className="mb-16 shadow-md">
+        <section className="mb-16 shadow-md rounded-lg">
           <div className="max-w-3xl mx-auto text-center">
             <h2 className="text-3xl font-bold text-[#3C2A21] mb-6">Our Story</h2>
             <p className="text-lg text-[#1A120B]">
