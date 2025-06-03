@@ -12,19 +12,41 @@ const OrdersPage = () => {
     const fetchOrders = async () => {
       try {
         setLoading(true);
-        // You can add userId as query parameter if needed
-        // const userId = 'your-user-id'; // Get from auth context or session
-        // const res = await fetch(`/api/orders?userId=${userId}`);
-        const res = await fetch('/api/orders');
+        setError(null);
+        
+        // Add timeout to prevent hanging requests
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 10000); // 10 second timeout
+        
+        const res = await fetch('/api/order', {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          signal: controller.signal
+        });
+        
+        clearTimeout(timeoutId);
         
         if (!res.ok) {
-          throw new Error('Failed to fetch orders');
+          const errorData = await res.json().catch(() => ({}));
+          throw new Error(errorData.error || `HTTP error! status: ${res.status}`);
         }
         
         const data = await res.json();
-        setOrders(data.orders || []);
+        
+        if (data.success) {
+          setOrders(data.orders || []);
+        } else {
+          throw new Error('Failed to fetch orders from response');
+        }
       } catch (err) {
-        setError(err.message || 'Failed to fetch orders');
+        console.error('Fetch error:', err);
+        if (err.name === 'AbortError') {
+          setError('Request timed out. Please try again.');
+        } else {
+          setError(err.message || 'Failed to fetch orders');
+        }
       } finally {
         setLoading(false);
       }
@@ -34,7 +56,7 @@ const OrdersPage = () => {
   }, []);
 
   const viewOrderDetails = (orderId) => {
-    router.push(`/order/${orderId}`);
+    router.push(`/orders/${orderId}`);
   };
 
   const formatDate = (dateString) => {
@@ -51,6 +73,13 @@ const OrdersPage = () => {
     }
   };
 
+  const retryFetch = () => {
+    setError(null);
+    setLoading(true);
+    // Re-trigger useEffect
+    window.location.reload();
+  };
+
   // Loading Spinner Component
   const LoadingSpinner = () => (
     <div className="flex justify-center items-center py-12">
@@ -61,7 +90,13 @@ const OrdersPage = () => {
   // Error Component
   const ErrorMessage = ({ message }) => (
     <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
-      Error: {message}
+      <p className="font-semibold">Error: {message}</p>
+      <button 
+        onClick={retryFetch}
+        className="mt-2 bg-red-600 text-white py-1 px-3 rounded text-sm hover:bg-red-700 transition-colors"
+      >
+        Retry
+      </button>
     </div>
   );
 
@@ -129,7 +164,11 @@ const OrdersPage = () => {
                               ? 'bg-yellow-100 text-yellow-800'
                               : order.status === 'pending'
                               ? 'bg-blue-100 text-blue-800'
-                              : 'bg-red-100 text-red-800'
+                              : order.status === 'completed'
+                              ? 'bg-green-100 text-green-800'
+                              : order.status === 'cancelled'
+                              ? 'bg-red-100 text-red-800'
+                              : 'bg-gray-100 text-gray-800'
                           }`}>
                             {order.status?.charAt(0)?.toUpperCase() + order.status?.slice(1) || 'Unknown'}
                           </span>

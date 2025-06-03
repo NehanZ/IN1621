@@ -71,76 +71,89 @@ export default function Checkout() {
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleSubmit = async (event) => {
-    event.preventDefault();
-    
-    if (!validateForm()) {
-      setToastMessage('Please fill all required fields correctly');
-      setShowToast(true);
-      return;
-    }
+const handleSubmit = async (event) => {
+  event.preventDefault();
 
-    setIsProcessing(true);
+  if (!validateForm()) {
+    setToastMessage('Please fill all required fields correctly');
+    setShowToast(true);
+    return;
+  }
 
-    try {
-      const orderData = {
-        userId: session?.user?.id || session?.user?.email,
-        items: cartItems.map(item => ({
-          product: item.id,
+  setIsProcessing(true);
+
+  try {
+    // Debug: Log cart items to see their structure
+    console.log('Cart items:', cartItems);
+
+    const orderData = {
+      userId: session?.user?.id || session?.user?.email,
+      items: cartItems.map(item => {
+        // Debug: Log each item to see its structure
+        console.log('Processing item:', item);
+        
+        return {
+          product: item.id || item._id || item.productId, // Try multiple possible ID fields
+          quantity: item.quantity,
           name: item.name,
           price: item.price,
-          quantity: item.quantity,
           option: item.option || null
-        })),
-        totalAmount: total,
-        status: 'pending',
-        paymentDetails: {
-          method: selectedMethod,
-          amount: total,
-          deliveryFee: deliveryFee,
-          subtotal: subtotal,
-          promoCode: promoCode || null
-        },
-        deliveryInfo: {
-          fullName: formData.fullName,
-          phone: formData.phone,
-          province: formData.province,
-          district: formData.district,
-          address: formData.address,
-          city: formData.city,
-          landmark: formData.landmark,
-          deliveryLabel: selectedLabel
-        }
-      };
-
-      // Send POST request to save order
-      const response = await fetch('/api/orders', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(orderData)
-      });
-
-      const result = await response.json();
-
-      if (!response.ok) {
-        throw new Error(result.error || 'Failed to place order');
+        };
+      }),
+      totalAmount: total,
+      status: 'pending',
+      paymentDetails: {
+        method: selectedMethod,
+        amount: total,
+        deliveryFee: deliveryFee,
+        subtotal: subtotal,
+        promoCode: promoCode || null
+      },
+      deliveryInfo: {
+        fullName: formData.fullName,
+        phone: formData.phone,
+        province: formData.province,
+        district: formData.district,
+        address: formData.address,
+        city: formData.city,
+        landmark: formData.landmark,
+        deliveryLabel: selectedLabel
       }
+    };
 
-      // Clear cart and redirect on success
-      clearCart();
-      router.push(`/order-confirmation?orderId=${result.orderId}`);
-      
-    } catch (error) {
-      console.error('Checkout error:', error);
-      setToastMessage(error.message || 'Failed to place order. Please try again.');
-      setShowToast(true);
-    } finally {
-      setIsProcessing(false);
+    // Debug: Log the complete order data
+    console.log('Order data being sent:', orderData);
+
+    const response = await fetch('/api/order', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(orderData)
+    });
+
+    let result;
+    try {
+      const text = await response.text(); // get raw response
+      console.log('Raw server response:', text); // Debug log
+      result = text ? JSON.parse(text) : {}; // try to parse if it's not empty
+    } catch (err) {
+      console.error('Failed to parse server response:', err);
+      throw new Error('Invalid response from server');
     }
-  };
 
+    if (!response.ok) {
+      throw new Error(result?.error || `Server error: ${response.status}`);
+    }
+
+    clearCart();
+    router.push(`/order-confirmation?orderId=${result.orderId}`);
+  } catch (error) {
+    console.error('Checkout error:', error);
+    setToastMessage(error.message || 'Failed to place order. Please try again.');
+    setShowToast(true);
+  } finally {
+    setIsProcessing(false);
+  }
+};
   return (
     <div>
       <Header />
