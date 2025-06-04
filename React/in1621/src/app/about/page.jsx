@@ -8,19 +8,19 @@ const teamMembers = [
   {
     name: 'Jane Doe',
     role: 'Founder & Head Barista',
-    image: '/images/jane.png',
+    image: '/images/boy4.jpg',
     bio: 'Jane brings 10 years of coffee artistry to Ecafe Coffee.',
   },
   {
     name: 'John Smith',
     role: 'Operations Manager',
-    image: '/images/john.png',
+    image: '/images/boy2.jpg',
     bio: 'John ensures every cup of coffee meets our quality standards.',
   },
   {
     name: 'Ayesha Perera',
     role: 'Marketing Lead',
-    image: '/images/ayesha.png',
+    image: '/images/girl3.jpg',
     bio: 'Ayesha spreads the love for Ecafe Coffee far and wide.',
   },
 ];
