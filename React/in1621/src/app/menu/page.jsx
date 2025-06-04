@@ -5,6 +5,7 @@ import Header from '../../components/header-footer/Header';
 import Footer from '../../components/header-footer/Footer';
 import CoffeeProductCard from '../../components/product/CoffeeProductCard';
 
+
 const MenuPage = () => {
   const [products, setProducts] = useState([]);
   const [activeFilter, setActiveFilter] = useState('all');

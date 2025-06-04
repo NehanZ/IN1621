@@ -3,23 +3,24 @@ import Image from 'next/image';
 import Header from '../../components/header-footer/Header';
 import Footer from '../../components/header-footer/Footer'
 
+
 const teamMembers = [
   {
     name: 'Jane Doe',
     role: 'Founder & Head Barista',
-    image: '/images/jane.jpg',
+    image: '/images/jane.png',
     bio: 'Jane brings 10 years of coffee artistry to Ecafe Coffee.',
   },
   {
     name: 'John Smith',
     role: 'Operations Manager',
-    image: '/images/john.jpg',
+    image: '/images/john.png',
     bio: 'John ensures every cup of coffee meets our quality standards.',
   },
   {
     name: 'Ayesha Perera',
     role: 'Marketing Lead',
-    image: '/images/ayesha.jpg',
+    image: '/images/ayesha.png',
     bio: 'Ayesha spreads the love for Ecafe Coffee far and wide.',
   },
 ];
@@ -30,8 +31,8 @@ export default function About() {
       <Header />
       {/* Hero Section */}
       <section 
-        className="h-96 flex items-center justify-center bg-cover bg-center text-white text-center"
-        style={{ backgroundImage: "url('https://dynamic-media-cdn.tripadvisor.com/media/photo-o/17/56/b5/6a/idees-art-cafe-shop-kastoria.jpg?w=800&h=-1&s=1')" }}
+        className="h-100 flex items-center justify-center bg-cover bg-center text-white text-center"
+        style={{ backgroundImage: "url('/images/hero-bg.jpg')" }}
       >
         <div className="p-8 rounded-lg">
           <h1 className="text-6xl font-bold mb-4">Welcome to Ecafe</h1>
@@ -79,7 +80,7 @@ export default function About() {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {teamMembers.map((member, index) => (
               <div key={index} className="bg-[#e9e9db] rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow">
-                <div className="relative h-64 w-full">
+                <div className="relative h-88 w-full hover:scale-102 transition-transform duration-700">
                   <Image
                     src={member.image}
                     alt={member.name}

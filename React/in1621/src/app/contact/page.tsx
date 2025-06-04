@@ -3,6 +3,8 @@ import React, { useState } from 'react';
 import Header from '../../components/header-footer/Header';
 import Footer from '../../components/header-footer/Footer';
 
+
+
 export default function Contact() {
   const [formData, setFormData] = useState({
     name: '',
@@ -105,7 +107,7 @@ export default function Contact() {
               </p>
               <p className="flex items-start">
                 <span className="font-bold mr-2">Phone:</span> 
-                <a href="tel:+940207313535" className="hover:text-[#c28f5a] transition-colors">+94 020 731 3535</a>
+                <a href="tel:+940207313535" className="hover:text-[#c28f5a] transition-colors">+94 011 731 3537</a>
               </p>
               <p className="flex items-start">
                 <span className="font-bold mr-2">Email:</span> 

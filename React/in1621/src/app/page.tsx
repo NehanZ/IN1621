@@ -2,12 +2,17 @@
 
 import Footer from '../components/header-footer/Footer';
 import Header from '../components/header-footer/Header';
-import FeaturedProducts from 'D:/VCS/UNI/IN1621/React/in1621/src/components/product/FeaturedProducts .jsx';
+import FeaturedProducts from '../components/product/FeaturedProducts ';
 import SubscriptionPreferences from '../components/subscription/SubscriptionPreferences';
 import CustomerReview from '../components/reviews/CustomerReview';
 import Image from 'next/image';
 import { ChevronRight } from 'lucide-react';
 import { useEffect, useState } from 'react';
+
+import Link from 'next/link';
+
+
+
 
 export default function Home() {
   const [lowStockProducts, setLowStockProducts] = useState([]);
@@ -61,9 +66,13 @@ export default function Home() {
           <div className="text-center px-4">
             <h1 className="text-9xl md:text-7xl font-bold text-white mb-4">Ecafe Coffee</h1>
             <p className="text-5xl md:text-2xl text-white mb-8">Serving the finest coffee in Colombo since 2010</p>
-            <button className="bg-[#8a5a44] hover:bg-[#6d4737] text-white px-8 py-3 rounded-lg text-lg transition-colors cursor-pointer">
-              View Menu
-            </button>
+            
+            <Link href="/menu">
+              <button className="bg-[#8a5a44] hover:bg-[#6d4737] text-white px-8 py-3 rounded-lg text-lg transition-colors cursor-pointer">
+                View Menu
+              </button>
+            </Link>
+            
           </div>
         </div>
       </section>
@@ -78,9 +87,11 @@ export default function Home() {
               Today, we're proud to serve our community with ethically-sourced beans 
               and handcrafted beverages made with care.
             </p>
+            <Link href="/about">
             <button className="flex items-center text-[#8a5a44] hover:text-[#6d4737] font-medium">
               Learn More About Us <ChevronRight className="ml-1" size={20} />
             </button>
+            </Link>
           </div>
           <div className="relative h-80 md:h-96 rounded-lg overflow-hidden shadow-lg">
             <Image
@@ -96,7 +107,7 @@ export default function Home() {
       {/* Featured Products (Products with the Lowest Stock) */}
       <section className="py-16 px-6 bg-[#D5CEA3]">
         <div className="max-w-6xl mx-auto">
-          <h2 className="text-3xl font-bold text-[#3C2A21] mb-12 text-center">Products with the Lowest Stock</h2>
+          <h2 className="text-3xl font-bold text-[#3C2A21] mb-12 text-center">Hot Products</h2>
           <FeaturedProducts products={lowStockProducts} />
         </div>
       </section>
