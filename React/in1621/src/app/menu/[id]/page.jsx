@@ -139,7 +139,7 @@ export default function ProductDetails() {
                 <p className="text-[#1A120B] mb-4 leading-relaxed">{product.description}</p>
                 
                 <div className="mb-4">
-                  <span className="text-2xl font-bold text-[#3C2A21]">${product.price}</span>
+                  <span className="text-2xl font-bold text-[#3C2A21]">LKR {product.price}</span>
                   <span className="ml-4 text-sm text-[#1A120B] bg-[#E5E5CB] px-3 py-1 rounded-full">
                     {product.category}
                   </span>
@@ -150,7 +150,7 @@ export default function ProductDetails() {
                   <div className="mb-4">
                     <span className={`text-sm px-3 py-1 rounded-full ${
                       product.stock > 0 
-                        ? 'bg-green-200 text-green-800' 
+                        ? 'bg-green-600 text-green-100' 
                         : 'bg-red-200 text-red-800'
                     }`}>
                       {product.stock > 0 ? `In Stock (${product.stock} available)` : 'Out of Stock'}
@@ -200,10 +200,10 @@ export default function ProductDetails() {
                 <button
                   onClick={handleAddToCart}
                   disabled={product.stock === 0}
-                  className={`w-full py-3 px-6 rounded-lg font-semibold transition-colors ${
+                  className={`w-full py-3 px-6 rounded-lg font-semibold transition-colors cursor-pointer ${
                     product.stock === 0
-                      ? 'bg-gray-400 text-gray-600 cursor-not-allowed'
-                      : 'bg-[#3C2A21] text-[#E5E5CB] hover:bg-[#1A120B]'
+                      ? 'bg-gray-400 text-gray-600 cursor-pointer'
+                      : 'bg-[#8a5a44] text-[#E5E5CB] hover:bg-[#3C2A21]'
                   }`}
                 >
                   {product.stock === 0 ? 'Out of Stock' : 'Add to Cart'}

@@ -136,9 +136,9 @@ export default function CustomerReview() {
           </div>
 
           {/* Image Section */}
-          <div className="w-full md:w-1/3 flex justify-center items-center">
+          <div className="w-60 md:w-1/3 flex justify-center items-center">
             <img
-              src="/images/coffee-cup.jpg"
+              src="/images/coffee-cup.png"
               alt="Coffee Cup"
               className="rounded-lg w-full h-auto object-cover max-h-96"
             />
